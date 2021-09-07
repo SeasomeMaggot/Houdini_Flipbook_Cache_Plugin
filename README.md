@@ -5,7 +5,7 @@
 
 #Copy and parameter before click the tool button.
 
-#This tool support multipule parameter channels. Use vector input for multi channels. Make sure the len of vector inputs matchs the channel quantity. 
+#This tool support multipule parameter channels. Use vector input for multi channels. Make sure the length of vector inputs matchs the channel quantity. 
 
 #You can choose to generate file cache nodes. 
 
