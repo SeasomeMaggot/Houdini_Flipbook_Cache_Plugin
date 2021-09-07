@@ -10,3 +10,5 @@
 #You can choose to generate file cache nodes. 
 
 #This tool can also create multi MPlay preview renders based on change of one or more parameters, currently this function supports Mantra and Arnold.
+
+#Here is a video instruction in Chinese:https://vimeo.com/599835387
