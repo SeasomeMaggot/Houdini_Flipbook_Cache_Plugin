@@ -257,7 +257,6 @@ class Ui_MainWindow(object):
     def addChanList(self):
         UIchanPath = ""
         chanPath = self.expChanList()
-        print(self.channelList)
         setCP = set(chanPath)
         setCL = set(self.channelList)
         if not setCP.issubset(setCL):
@@ -265,7 +264,6 @@ class Ui_MainWindow(object):
                 if chanItem not in self.channelList:
                     self.channelList.append(chanItem)
 
-        print(self.channelList)
         for chanLine in self.channelList:
             UIchanPath += chanLine + "\n"
         self.label.setText(
@@ -380,21 +378,32 @@ class Ui_MainWindow(object):
     #!!!  ^^^   function for getting all input value from Houdini and UI
     #------------------------------------------------------------------------------------------------------------------
     def makeRender(self, num, getInputValue):
-        if isinstance(getInputValue, list):
-            inputValue = getInputValue[0].split(self.sepText.text())
         chanPath = self.getHouVal()[0]
         parmName = self.getHouVal()[1]
         nodeName = self.getHouVal()[2]
-        if len(getInputValue) != len(chanPath):
-            QMessageBox.about(self.centralwidget, "Horrible Error!",
-                              "Vector length MUST match channel length!!!")
-        for n in range(len(chanPath)):  # loop the input value to node parm
-            try:
-                hou.node(nodeName[n]).parm(parmName[n]).deleteAllKeyframes()
-                hou.node(nodeName[n]).setParms({parmName[n]: inputValue[n]})  # set Parm
-            except:
-                hou.node(nodeName[n]).parm(parmName[n]).deleteAllKeyframes()
-                hou.node(nodeName[n]).setParmExpressions({parmName[n]: inputValue[n]})  # set Expr
+
+        if isinstance(getInputValue, list):
+            setValue = getInputValue[0].split(self.sepText.text())
+
+            for n in range(len(chanPath)):  # loop the input value to node parm
+                try:
+                    hou.node(nodeName[n]).parm(parmName[n]).deleteAllKeyframes()
+                    hou.node(nodeName[n]).setParms({parmName[n]: setValue[n]})  # set Parm
+                except:
+                    hou.node(nodeName[n]).parm(parmName[n]).deleteAllKeyframes()
+                    hou.node(nodeName[n]).setParmExpressions({parmName[n]: setValue[n]})  # set Expr
+                # ^^^ set parm with bracket input list
+
+        else:
+            setValue = getInputValue
+            for n in range(len(chanPath)):  # loop the input value to node parm
+                try:
+                    hou.node(nodeName[n]).parm(parmName[n]).deleteAllKeyframes()
+                    hou.node(nodeName[n]).setParms({parmName[n]: setValue})  # set Parm
+                except:
+                    hou.node(nodeName[n]).parm(parmName[n]).deleteAllKeyframes()
+                    hou.node(nodeName[n]).setParmExpressions({parmName[n]: setValue})  # set Expr
+            # ^^^ set parm without bracket input list
 
         try:
             hou.selectedNodes()[0].type().name()
@@ -414,26 +423,36 @@ class Ui_MainWindow(object):
 
     def makeFilpbook(self,num,getInputValue):
         def changeVar(inputValue):
-            if isinstance(getInputValue,list):
-                inputValue = getInputValue[0].split(self.sepText.text())
             chanPath = self.getHouVal()[0]
             parmName = self.getHouVal()[1]
             nodeName = self.getHouVal()[2]
-
-            if len(getInputValue) != len(chanPath):
-                QMessageBox.about(self.centralwidget, "Horrible Error!",
-                                  "Vector length MUST match channel length!!!")
-
             startF = self.getFrameRange()[0]
             endF = self.getFrameRange()[1]
 
-            for n in range(len(chanPath)):# loop the input value to node parm
-                try:
-                    hou.node(nodeName[n]).parm(parmName[n]).deleteAllKeyframes()
-                    hou.node(nodeName[n]).setParms({parmName[n]: inputValue[n]})  # set Parm
-                except:
-                    hou.node(nodeName[n]).parm(parmName[n]).deleteAllKeyframes()
-                    hou.node(nodeName[n]).setParmExpressions({parmName[n]: inputValue[n]})  # set Expr
+            if isinstance(getInputValue,list):
+                setValue = getInputValue[0].split(self.sepText.text())
+
+                for n in range(len(chanPath)):# loop the input value to node parm
+                    try:
+                        hou.node(nodeName[n]).parm(parmName[n]).deleteAllKeyframes()
+                        hou.node(nodeName[n]).setParms({parmName[n]: setValue[n]})  # set Parm
+                    except:
+                        hou.node(nodeName[n]).parm(parmName[n]).deleteAllKeyframes()
+                        hou.node(nodeName[n]).setParmExpressions({parmName[n]: setValue[n]})  # set Expr
+
+                    # ^^^ set parm with bracket input list
+
+            else:
+                setValue = getInputValue
+                for n in range(len(chanPath)):# loop the input value to node parm
+                    try:
+                        hou.node(nodeName[n]).parm(parmName[n]).deleteAllKeyframes()
+                        hou.node(nodeName[n]).setParms({parmName[n]: setValue})  # set Parm
+                    except:
+                        hou.node(nodeName[n]).parm(parmName[n]).deleteAllKeyframes()
+                        hou.node(nodeName[n]).setParmExpressions({parmName[n]: setValue})  # set Expr
+                # ^^^ set parm without bracket input list
+
             return chanPath,parmName,startF,endF
         funcVar = changeVar(getInputValue)
 
@@ -583,3 +602,4 @@ class MainWindow(QMainWindow):
 mainw = MainWindow()
 mainw.setWindowFlags(Qt.WindowStaysOnTopHint)
 mainw.show()
+
