@@ -566,6 +566,7 @@ class Ui_MainWindow(object):
                         hou.node(fileNode.path()).setInput(0, selectedNode) # connect file cache node to selected node
                         fileNode.moveToGoodPosition()
                         fileNode.setParms({"filemode": 2}) # set file cache node to write mode
+                        fileNode.setDisplayFlag(1) # set display flag back to file cahe node for the flipbook
 
                         self.makeFilpbook(num,inputValueList)
                         displayNode.setDisplayFlag(1)  # set display flag back to output node for the next round of loop
@@ -602,4 +603,3 @@ class MainWindow(QMainWindow):
 mainw = MainWindow()
 mainw.setWindowFlags(Qt.WindowStaysOnTopHint)
 mainw.show()
-
