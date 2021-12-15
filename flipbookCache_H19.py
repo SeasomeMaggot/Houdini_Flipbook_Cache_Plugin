@@ -479,8 +479,6 @@ class Ui_MainWindow(object):
     def createCache(self):
         InputValue = self.getInputValue()
         cacheFormat = self.getFormat()
-        startF = self.getFrameRange()[0]
-        endF = self.getFrameRange()[1]
 
         parmName = self.getHouVal()[1][0]
         nodeName = self.getHouVal()[2][0]
@@ -517,19 +515,14 @@ class Ui_MainWindow(object):
                     relPath = RelPath + "IS" + str(inputValue) + "." + index + cacheFormat
                     FileNode = hou.node(selectedNode.parent().path() + "/FC" + nodeName.replace("/","").replace("obj","") + "."  + parmName + "." + str(inputValue) + versionNum) # get previous file cache node
                     if FileNode is None:# check if file cache Nodes are existed && create file cache node
-                        fileNode = selectedNode.parent().createNode("filecache", "FC" + nodeName.replace("/","").replace("obj","") + "." + parmName + "." + str(inputValue) + versionNum) # create file cache node
+                        fileNode = selectedNode.parent().createNode("file", "FC" + nodeName.replace("/","").replace("obj","") + "." + parmName + "." + str(inputValue) + versionNum) # create file cache node
                         # check if file cache Nodes are existed && create file cache node
-                        fileNode.setParms({"filemethod": 1})
                         fileNode.setParms({"file": relPath})
-                        # fileNode.parm("f1").deleteAllKeyframes()
-                        # fileNode.parm("f2").deleteAllKeyframes()
-                        # fileNode.setParms({"f1": startF, "f2": endF})
+
                     else:
                         fileNode = FileNode # use existed file cache node
                         fileNode.setParms({"file": relPath})
-                        # fileNode.parm("f1").deleteAllKeyframes()
-                        # fileNode.parm("f2").deleteAllKeyframes()
-                        # fileNode.setParms({"f1": startF, "f2": endF})
+
                 except: # change node names if input value is expression
                     expValue = "Expr" + str(num)
                     relPath = RelPath + "IS" + expValue + "." + index + cacheFormat
@@ -538,22 +531,14 @@ class Ui_MainWindow(object):
                                                                                                                  "") + "." + parmName + "." + str(
                             expValue) + versionNum)  # get previous file cache node
                     if FileNode is None: # check if file cache Nodes are existed && create file cache node
-                        fileNode = selectedNode.parent().createNode("filecache","FC" + nodeName.replace("/", "").replace("obj","") + "." + parmName + "." + str(expValue) + versionNum)
+                        fileNode = selectedNode.parent().createNode("file","FC" + nodeName.replace("/", "").replace("obj","") + "." + parmName + "." + str(expValue) + versionNum)
                         # create file cache node
-                        fileNode.setParms({"filemethod": 1})
-                        fileNode.setParms({"file": relPath})
-                        # fileNode.parm("f1").deleteAllKeyframes()
-                        # fileNode.parm("f2").deleteAllKeyframes()
-                        # fileNode.setParms({"f1": startF, "f2": endF})
-                    else:
-                        fileNode = FileNode # use existed file cache node
-                        fileNode.setParms({"filemethod": 1})
                         fileNode.setParms({"file": relPath})
 
-                        # fileNode.parm("f1").deleteAllKeyframes()
-                        # fileNode.parm("f2").deleteAllKeyframes()
-                        # fileNode.setParms({"f1": startF, "f2": endF})
-                        # set file cache node frame range
+                    else:
+                        fileNode = FileNode # use existed file cache node
+                        fileNode.setParms({"file": relPath})
+
 
                 if len(hou.selectedNodes()) != 1:
                     QMessageBox.about(self.centralwidget, "Horrible Error!",
@@ -569,7 +554,7 @@ class Ui_MainWindow(object):
                         hou.node(fileNode.path()).setInput(0, selectedNode) # connect file cache node to selected node
                         fileNode.moveToGoodPosition()
                         fileNode.setParms({"filemode": 2}) # set file cache node to write mode
-                        fileNode.setDisplayFlag(1) # set display flag back to file cahe node for the flipbook
+                        fileNode.setDisplayFlag(1) # set display flag back to file cache node for the flipbook
 
                         self.makeFilpbook(num,inputValueList)
                         displayNode.setDisplayFlag(1)  # set display flag back to output node for the next round of loop
