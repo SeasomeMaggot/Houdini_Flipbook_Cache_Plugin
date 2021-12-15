@@ -1,4 +1,3 @@
-
 import hou
 import toolutils
 import re
