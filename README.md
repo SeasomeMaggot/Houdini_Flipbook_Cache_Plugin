@@ -1,4 +1,6 @@
 # Houdini Flipbook Cache Plugin
+
+---------------------------------------------------------------
 #This tool can automatic create multiple flipbooks based on changes of one or more parameters in Houdini.
 
 #To install, just copy the script to a new tool on the shelf in Houdini.
@@ -26,3 +28,6 @@
 #Here is a video instruction in Chinese: https://vimeo.com/599835387
 
 #bilibili instruction: https://www.bilibili.com/video/bv1Py4y1V7SP
+
+----------------------------------------------------------------------------------------------------------------------
+#Update Houdini 19: since Houdini 19 cancel file mode parm in file cache node, I use file node as a subsitution for creating flipbook with caching.
